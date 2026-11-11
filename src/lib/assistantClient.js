@@ -1,12 +1,12 @@
 // Talks to the patient-assistant server function. The AI key lives only on
 // the server; this file sends the signed-in patient's own access token and
 // nothing else that identifies them.
-import { buildRequestHistory, toDateKey } from '../core'
+import { buildRequestHistory, toDateKey, cleanConfigValue } from '../core'
 
-const FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/patient-assistant`
+const FUNCTION_URL = `${cleanConfigValue(import.meta.env.VITE_SUPABASE_URL)}/functions/v1/patient-assistant`
 // The project's public key (the same one the Supabase client uses). Sent in
 // the `apikey` header as the Supabase client itself does. It is not a secret.
-const PUBLIC_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+const PUBLIC_KEY = cleanConfigValue(import.meta.env.VITE_SUPABASE_ANON_KEY)
 
 // Resolves to { ok: true, data } or { ok: false, code } (code: see ASSISTANT_ERRORS).
 // Never throws and never returns made-up content.

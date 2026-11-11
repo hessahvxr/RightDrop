@@ -7,10 +7,11 @@ import Spinner from '../../components/Spinner'
 import { useAuth } from '../../context/AuthContext'
 import { supabase } from '../../lib/supabaseClient'
 import { EYE_LABELS } from '../../lib/prescriptionHelpers'
+import { cleanConfigValue } from '../../core/config.js'
 
-const SCAN_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/scan-medication`
+const SCAN_FUNCTION_URL = `${cleanConfigValue(import.meta.env.VITE_SUPABASE_URL)}/functions/v1/scan-medication`
 // The project's public key, sent in the `apikey` header as the Supabase client does. Not a secret.
-const PUBLIC_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+const PUBLIC_KEY = cleanConfigValue(import.meta.env.VITE_SUPABASE_ANON_KEY)
 
 export default function PatientScan() {
   const { user, session } = useAuth()

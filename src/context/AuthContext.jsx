@@ -64,10 +64,15 @@ export function AuthProvider({ children }) {
       setSession(data.session)
       setRole(data.session?.user?.app_metadata?.role ?? null)
       if (data.session) {
-        refreshUser().finally(() => setLoading(false))
+        refreshUser().catch(() => {}).finally(() => setLoading(false))
       } else {
         setLoading(false)
       }
+    }).catch((error) => {
+      // The saved session could not be read (for example no connection): show
+      // the signed-out screens rather than a loader that never ends.
+      console.error('Failed to read the session:', error?.message)
+      if (mounted) setLoading(false)
     })
 
     // Listen for auth state changes.
@@ -79,8 +84,13 @@ export function AuthProvider({ children }) {
       if (newSession) {
         // Wrap async work to avoid deadlock inside the synchronous callback.
         (async () => {
-          await refreshUser()
-          setLoading(false)
+          try {
+            await refreshUser()
+          } catch (error) {
+            console.error('Failed to load the user:', error?.message)
+          } finally {
+            setLoading(false)
+          }
         })()
       } else {
         setUser(null)
