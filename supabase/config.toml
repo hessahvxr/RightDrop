@@ -1,0 +1,5 @@
+[functions.scan-medication]
+verify_jwt = true
+
+[functions.patient-assistant]
+verify_jwt = true
